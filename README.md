@@ -1,3 +1,3 @@
-# Lawn bowls score card
+# Lawn bowls scorecard
 
 I was tired of using the Notes app and was always forgetting to bring scoresheets...

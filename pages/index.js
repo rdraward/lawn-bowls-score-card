@@ -5,17 +5,24 @@ import styles from "../styles/Home.module.css";
 export default function Home() {
   const [ends, setEnds] = useState([]);
 
-  const addEnd = (event) =>
-    setEnds(() => {
+  // add scores for an end
+  const addEnd = async (event) => {
+    await setEnds(() => {
       event.preventDefault();
       const rileyScore = event.target.riley.value;
       const opponentScore = event.target.opponent.value;
 
       const updatedEnds = [...ends];
       updatedEnds.push([rileyScore, opponentScore]);
+
       return updatedEnds;
     });
 
+    // reset the form
+    event.target.reset();
+  };
+
+  // delete an end
   const deleteEnd = (endNumber) =>
     setEnds(() => {
       const updatedEndState = [...ends];
@@ -23,12 +30,24 @@ export default function Home() {
       return updatedEndState;
     });
 
+  // calculate the total running score
+  // run on each new end addition, maybe should be state but such is life
   const calculateEndTotal = (index, playerIndex) =>
     [...ends].reduce(
       (total, current, i) =>
         i <= index ? parseInt(total) + parseInt(current[playerIndex]) : total,
       0
     );
+
+  // total ends won by each player
+  const calculateEndsWon = (playerIndex) => {
+    const otherIndex = playerIndex === 0 ? 1 : 0;
+    return [...ends].reduce(
+      (total, current) =>
+        current[playerIndex] > current[otherIndex] ? total + 1 : total,
+      0
+    );
+  };
 
   return (
     <div className={styles.container}>
@@ -79,10 +98,22 @@ export default function Home() {
                 </th>
               </tr>
             ))}
+            <tr>
+              <th>
+                <br />
+              </th>
+            </tr>
+            <tr>
+              <th>Ends won:</th>
+              <th />
+              <th>{calculateEndsWon(0)}</th>
+              <th />
+              <th>{calculateEndsWon(1)}</th>
+            </tr>
           </tbody>
         </table>
 
-        <form onSubmit={addEnd}>
+        <form id="lawn-bowls-form" onSubmit={addEnd}>
           <div className={styles.form}>
             <span>
               <div className={styles.input}>
